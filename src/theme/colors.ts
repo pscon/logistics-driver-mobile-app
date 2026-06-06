@@ -6,6 +6,9 @@ export const colors = {
   border: '#E2E6EA',
   primary: '#2563EB',
   primaryDark: '#1D4ED8',
+  primaryMuted: '#EFF6FF',
+  primaryBorder: '#BFDBFE',
+  splashBackground: '#2563EB',
   success: '#16A34A',
   warning: '#D97706',
   danger: '#DC2626',
@@ -35,6 +38,17 @@ export const radius = {
   sm: 8,
   md: 12,
   lg: 16,
+  xl: 20,
+};
+
+export const shadows = {
+  card: {
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 3,
+  },
 };
 
 export const typography = {

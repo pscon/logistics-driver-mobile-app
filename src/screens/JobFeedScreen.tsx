@@ -1,12 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import {
   Alert,
   FlatList,
   RefreshControl,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,13 +13,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { EmptyState } from '../components/EmptyState';
 import { JobCard } from '../components/JobCard';
 import { LoadingOverlay } from '../components/LoadingOverlay';
+import { ScreenHeader } from '../components/ScreenHeader';
 import { RootStackParamList } from '../navigation/types';
 import {
   selectAvailableJobs,
   useJobsStore,
 } from '../store/jobsStore';
 import { Job } from '../types/job';
-import { colors, spacing, typography } from '../theme/colors';
+import { colors, spacing } from '../theme/colors';
 
 export function JobFeedScreen() {
   const navigation =
@@ -37,6 +37,17 @@ export function JobFeedScreen() {
   const clearError = useJobsStore((state) => state.clearError);
 
   const availableJobs = selectAvailableJobs(jobs);
+
+  const statLabel = useMemo(() => {
+    const count = availableJobs.length;
+    if (count === 0) {
+      return 'No jobs available right now';
+    }
+    if (count === 1) {
+      return '1 job ready to accept';
+    }
+    return `${count} jobs ready to accept`;
+  }, [availableJobs.length]);
 
   useEffect(() => {
     loadJobs();
@@ -72,12 +83,12 @@ export function JobFeedScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Available Jobs</Text>
-        <Text style={styles.subtitle}>
-          Accept a delivery to move it to My Jobs
-        </Text>
-      </View>
+      <ScreenHeader
+        title="Available Jobs"
+        subtitle="Accept a delivery to move it to My Jobs"
+        statLabel={statLabel}
+        statIcon="briefcase-outline"
+      />
 
       <FlatList
         data={availableJobs}
@@ -89,7 +100,11 @@ export function JobFeedScreen() {
         ]}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={refreshJobs} />
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={refreshJobs}
+            tintColor={colors.primary}
+          />
         }
         ListEmptyComponent={
           !isLoading ? (
@@ -111,21 +126,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.md,
-    gap: spacing.xs,
-  },
-  title: {
-    fontSize: typography.title,
-    fontWeight: '800',
-    color: colors.text,
-  },
-  subtitle: {
-    fontSize: typography.body,
-    color: colors.textSecondary,
   },
   listContent: {
     paddingHorizontal: spacing.lg,

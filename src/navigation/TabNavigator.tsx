@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { JobFeedScreen } from '../screens/JobFeedScreen';
 import { MyJobsScreen } from '../screens/MyJobsScreen';
 import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts';
 import { TabParamList } from './types';
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -18,6 +19,13 @@ export function TabNavigator() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
+          height: 62,
+          paddingTop: 6,
+          paddingBottom: 8,
+        },
+        tabBarLabelStyle: {
+          fontFamily: fonts.medium,
+          fontSize: 12,
         },
         tabBarIcon: ({ color, size }) => {
           const iconName =

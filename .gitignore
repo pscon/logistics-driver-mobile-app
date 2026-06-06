@@ -52,6 +52,7 @@ Thumbs.db
 .cursor/
 AGENTS.md
 CLAUDE.md
+PROJECT_GUIDE.md
 
 # TypeScript
 *.tsbuildinfo

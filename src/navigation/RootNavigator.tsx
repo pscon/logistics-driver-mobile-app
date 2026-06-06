@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { JobDetailScreen } from '../screens/JobDetailScreen';
 import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts';
 import { TabNavigator } from './TabNavigator';
 import { RootStackParamList } from './types';
 
@@ -13,20 +14,21 @@ export function RootNavigator() {
       screenOptions={{
         headerStyle: { backgroundColor: colors.surface },
         headerTintColor: colors.text,
-        headerTitleStyle: { fontWeight: '700' },
+        headerTitleStyle: { fontFamily: fonts.bold, fontSize: 17 },
         contentStyle: { backgroundColor: colors.background },
       }}
     >
       <Stack.Screen
         name="MainTabs"
         component={TabNavigator}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, title: 'Jobs' }}
       />
       <Stack.Screen
         name="JobDetail"
         component={JobDetailScreen}
         options={({ route }) => ({
           title: `Job ${route.params.jobId.replace('job-', '#').toUpperCase()}`,
+          headerBackTitle: 'Back',
         })}
       />
     </Stack.Navigator>

@@ -2,9 +2,15 @@ export type JobPriority = 'standard' | 'express' | 'same-day';
 
 export type JobStatus = 'available' | 'accepted' | 'picked_up' | 'delivered';
 
+export interface JobCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
 export interface JobLocation {
   city: string;
   address: string;
+  coordinates: JobCoordinates;
 }
 
 export interface Job {

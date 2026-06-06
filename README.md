@@ -1,126 +1,101 @@
 # Logistics Driver App
 
-A React Native (Expo) prototype for the driver-facing side of a logistics platform. Drivers can browse available delivery jobs, accept assignments, advance delivery status, and view job details with a progress tracker.
+React Native (Expo) application for the driver-facing side of a logistics platform, built as a technical case study. Drivers can browse available jobs, accept deliveries, update status, and view job details with a map and progress tracker.
 
-## Quick Start
+## Features
 
-### Prerequisites
+- **Job feed:** list available jobs with pickup, drop-off, priority, and estimates
+- **Accept jobs:** move accepted jobs from the feed to My Jobs
+- **My Jobs:** track active deliveries and advance status (`Accepted` → `Picked Up` → `Delivered`)
+- **Job detail:** full job info, status stepper, route map, and action buttons
+- **Pull to refresh:** reload jobs from the mock API
+- **Routing:** bottom tabs + stack — `JobFeed`, `MyJobs`, `JobDetail`
+- **In-memory API:** simulated REST backend via `jobsApi.ts`
+- **Zustand:** centralized state for jobs, loading, and status transitions
+- **Maps:** pickup/drop-off pins and route line on job detail (`react-native-maps`)
 
-- Node.js 18+
+## Screenshots
+
+### Splash screen
+
+Animated loading screen shown on app launch while jobs are fetched.
+
+![Splash screen](./docs/screenshots/splash.png)
+
+### Available Jobs
+
+Browse and accept delivery jobs. Each card shows pickup, drop-off, priority, distance, and duration.
+
+![Available Jobs](./docs/screenshots/available-jobs.png)
+
+### My Jobs
+
+Track accepted deliveries and confirm pickup or delivery from the card.
+
+![My Jobs](./docs/screenshots/my-jobs.png)
+
+### Job Detail
+
+Full job info with route map, addresses, status stepper, and action buttons.
+
+![Job Detail](./docs/screenshots/job-detail.png)
+
+## Prerequisites
+
+- Node.js 18 or later
 - npm
-- [Expo Go](https://expo.dev/go) on your phone (optional), or iOS Simulator / Android Emulator
+- [Expo Go](https://expo.dev/go) on a physical device, or iOS Simulator / Android Emulator
 
-### Run locally
+## Installation
 
 ```bash
 npm install
+```
+
+## Running locally
+
+```bash
 npx expo start
 ```
 
-Then:
+- Press **`i`** to open the iOS Simulator
+- Press **`a`** to open the Android Emulator
+- Scan the QR code with Expo Go on your phone
 
-- Press `i` to open the iOS Simulator
-- Press `a` to open the Android Emulator
-- Scan the QR code with Expo Go on a physical device
+## Demo flow
 
-## Demo Flow
+1. Open **Available Jobs** and tap **Accept Job** on a card
+2. Switch to **My Jobs** — job appears as **Accepted**
+3. Open job detail → **Confirm Pickup** → **Confirm Delivery**
+4. Return to the feed — accepted job does not reappear
 
-1. Open **Available Jobs** — browse mock delivery cards with pickup/drop-off, priority, and estimates.
-2. Tap **Accept Job** on a card (or open detail first, then accept).
-3. The job disappears from the feed and appears under **My Jobs** with status **Accepted**.
-4. Tap the job to open **Job Detail** — view full fields, route preview, and progress stepper.
-5. Tap **Confirm Pickup** → status becomes **Picked Up**.
-6. Tap **Confirm Delivery** → status becomes **Delivered**.
-7. Return to the feed — the accepted job does not reappear.
+## Architecture notes
 
-Pull down on either list to refresh from the mock API layer.
+| Layer | Responsibility |
+|-------|----------------|
+| `data/mockJobs.ts` | Seed data with Bay Area locations and coordinates |
+| `services/jobsApi.ts` | Mock REST calls with simulated latency |
+| `store/jobsStore.ts` | Zustand store — load, accept, and advance job status |
+| `screens/` | Route-level screens (feed, my jobs, detail, splash) |
+| `components/` | JobCard, StatusStepper, JobRouteMap, ScreenHeader, etc. |
+| `navigation/` | React Navigation — native stack + bottom tabs |
 
-## Architecture
+Status transitions are guarded in both the store and API layer so jobs cannot skip steps (e.g. deliver before pickup).
 
-### Navigation
+**Swapping the backend:** replace the internals of `jobsApi.ts` with `fetch()` calls to a real API; the store interface stays the same.
 
-```
-RootStack
-├── MainTabs (Bottom Tabs)
-│   ├── JobFeed      → Available jobs
-│   └── MyJobs       → Accepted / active / completed jobs
-└── JobDetail        → Full job view (stack push from either tab)
-```
+## What I would improve with more time
 
-Built with **React Navigation v7** (native stack + bottom tabs).
-
-### State Management
-
-**Zustand** store ([`src/store/jobsStore.ts`](src/store/jobsStore.ts)) holds the canonical job list and UI state:
-
-- `loadJobs` / `refreshJobs` — fetch from mock API
-- `acceptJob` — `available` → `accepted`
-- `advanceJobStatus` — `accepted` → `picked_up` → `delivered`
-
-Status transitions are guarded both in the store and the API layer to prevent invalid moves (e.g. skipping pickup).
-
-### Data Layer (Mock API)
-
-[`src/services/jobsApi.ts`](src/services/jobsApi.ts) mirrors a REST API with ~300ms simulated latency:
-
-| Function | Purpose |
-|----------|---------|
-| `fetchAvailableJobs()` | Jobs with `status === 'available'` |
-| `fetchMyJobs()` | Jobs with `accepted`, `picked_up`, or `delivered` |
-| `acceptJob(jobId)` | Accept an available job |
-| `updateJobStatus(jobId, status)` | Advance delivery status |
-
-Seed data lives in [`src/data/mockJobs.ts`](src/data/mockJobs.ts). To connect a real backend later, replace the internals of `jobsApi.ts` with `fetch()` calls — the store interface stays the same.
-
-### Screen Structure
-
-```
-src/
-├── components/     JobCard, PriorityBadge, StatusStepper, MapPlaceholder, ...
-├── data/           Mock job seed data
-├── navigation/     Root + tab navigators, typed routes
-├── screens/        JobFeed, MyJobs, JobDetail
-├── services/       Mock API layer
-├── store/          Zustand jobs store
-├── theme/          Colors, spacing, typography
-├── types/          Job, JobStatus, JobPriority
-└── utils/          Formatters for distance, duration, labels
-```
-
-### Styling
-
-React Native **StyleSheet** with shared theme tokens in [`src/theme/colors.ts`](src/theme/colors.ts).
-
-## Tradeoffs
-
-| Decision | Rationale |
-|----------|-----------|
-| Mock API instead of Express backend | Faster to build and review; API shape is ready for backend swap |
-| In-memory state | Resets on app reload; no AsyncStorage persistence |
-| Static map placeholder | Avoids Google/Apple Maps API keys; shows route concept visually |
-| Delivered jobs stay in My Jobs | Makes the full status flow visible during demo/review |
-| No authentication | Out of assignment scope |
-
-## Future Improvements
-
-With more time, I would add:
-
-- Real REST/GraphQL backend with driver auth
-- Persistent state (AsyncStorage or SQLite)
-- Live maps and turn-by-turn navigation (Google Maps / Mapbox)
-- GPS geofencing to gate pickup/delivery confirmations
+- Real REST API with driver authentication
+- Persistent local storage (state survives app restart)
+- Turn-by-turn navigation and GPS geofencing for pickup/delivery
 - Push notifications for new job assignments
-- Offline support and optimistic sync
-- Unit/integration tests for status transition logic
-- Filter completed jobs in My Jobs tab
+- Offline support and automated tests for status transitions
 
-## Tech Stack
+## Tech stack
 
 - Expo SDK 56 + TypeScript
 - React Navigation (native stack + bottom tabs)
 - Zustand
-- StyleSheet
-
-## License
-
-Private — built as a take-home assignment prototype.
+- react-native-maps
+- StyleSheet (custom styling, no UI component libraries)

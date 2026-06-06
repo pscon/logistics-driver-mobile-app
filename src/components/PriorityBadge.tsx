@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { JobPriority } from '../types/job';
 import { colors, radius, spacing, typography } from '../theme/colors';
+import { fontStyle } from '../theme/fonts';
 import { formatPriority } from '../utils/formatters';
 
 interface PriorityBadgeProps {
@@ -24,9 +25,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   text: {
+    ...fontStyle('bold'),
     color: colors.surface,
     fontSize: typography.small,
-    fontWeight: '700',
     textTransform: 'uppercase',
   },
 });

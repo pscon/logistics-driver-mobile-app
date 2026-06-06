@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { JobStatus } from '../types/job';
 import { colors, spacing, typography } from '../theme/colors';
+import { fontStyle } from '../theme/fonts';
 import { formatStatus } from '../utils/formatters';
 
 interface StatusBadgeProps {
@@ -31,8 +32,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   text: {
+    ...fontStyle('bold'),
     color: colors.surface,
     fontSize: typography.small,
-    fontWeight: '700',
   },
 });

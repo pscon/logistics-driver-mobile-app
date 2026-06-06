@@ -10,13 +10,14 @@ import {
   View,
 } from 'react-native';
 
-import { MapPlaceholder } from '../components/MapPlaceholder';
+import { JobRouteMap } from '../components/JobRouteMap';
 import { PriorityBadge } from '../components/PriorityBadge';
 import { StatusBadge } from '../components/StatusBadge';
 import { StatusStepper } from '../components/StatusStepper';
 import { RootStackParamList } from '../navigation/types';
 import { useJobsStore } from '../store/jobsStore';
 import { colors, radius, spacing, typography } from '../theme/colors';
+import { fontStyle } from '../theme/fonts';
 import {
   formatDistance,
   formatDuration,
@@ -80,7 +81,7 @@ export function JobDetailScreen({ route }: Props) {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Route</Text>
-        <MapPlaceholder pickup={job.pickup} dropoff={job.dropoff} />
+        <JobRouteMap pickup={job.pickup} dropoff={job.dropoff} />
       </View>
 
       <View style={styles.section}>
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   errorText: {
+    ...fontStyle('regular'),
     fontSize: typography.body,
     color: colors.textSecondary,
   },
@@ -200,23 +202,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   jobId: {
+    ...fontStyle('bold'),
     fontSize: typography.subtitle,
-    fontWeight: '800',
     color: colors.text,
   },
   sectionTitle: {
+    ...fontStyle('bold'),
     fontSize: typography.caption,
-    fontWeight: '700',
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   city: {
+    ...fontStyle('bold'),
     fontSize: typography.subtitle,
-    fontWeight: '700',
     color: colors.text,
   },
   address: {
+    ...fontStyle('regular'),
     fontSize: typography.body,
     color: colors.textSecondary,
   },
@@ -232,14 +235,14 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   metaLabel: {
+    ...fontStyle('bold'),
     fontSize: typography.small,
     color: colors.textSecondary,
-    fontWeight: '700',
     textTransform: 'uppercase',
   },
   metaValue: {
+    ...fontStyle('bold'),
     fontSize: typography.subtitle,
-    fontWeight: '700',
     color: colors.text,
   },
   timelineRow: {
@@ -249,12 +252,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   timelineLabel: {
+    ...fontStyle('regular'),
     fontSize: typography.body,
     color: colors.textSecondary,
   },
   timelineValue: {
+    ...fontStyle('medium'),
     fontSize: typography.body,
-    fontWeight: '600',
     color: colors.text,
   },
   primaryButton: {
@@ -272,9 +276,9 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   primaryButtonText: {
+    ...fontStyle('bold'),
     color: colors.surface,
     fontSize: typography.body,
-    fontWeight: '700',
   },
   completedBanner: {
     backgroundColor: '#ECFDF3',
@@ -283,8 +287,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   completedText: {
+    ...fontStyle('bold'),
     color: colors.success,
-    fontWeight: '700',
     fontSize: typography.body,
   },
 });
