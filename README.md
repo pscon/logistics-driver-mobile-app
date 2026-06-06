@@ -64,10 +64,10 @@ npx expo start
 
 ## Demo flow
 
-1. Open **Available Jobs** and tap **Accept Job** on a card
-2. Switch to **My Jobs** — job appears as **Accepted**
-3. Open job detail → **Confirm Pickup** → **Confirm Delivery**
-4. Return to the feed — accepted job does not reappear
+1. Open **Available Jobs**: tap **Accept Job** on a card
+2. Switch to **My Jobs**: job appears as **Accepted**
+3. Open job detail: **Confirm Pickup** → **Confirm Delivery**
+4. Return to the feed: accepted job does not reappear
 
 ## Architecture notes
 
